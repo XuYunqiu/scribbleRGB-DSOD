@@ -1,5 +1,5 @@
 # Scribble RGB-D SOD
-Dataset, code and result repository for our paper:
+This repository includes datasets, code and results for our paper:
 
 Weakly Supervised RGB-D Salient Object Detection with Prediction Consistency Training and Active Scribble Boosting, TIP'22
 
@@ -23,7 +23,10 @@ If you find this project useful for your research, please use the following BibT
   title={Weakly Supervised RGB-D Salient Object Detection with Prediction Consistency Training and Active Scribble Boosting},
   author={Xu, Yunqiu and Yu, Xin and Zhang, Jing and Zhu, Linchao and Wang, Dadong},
   journal={IEEE Transactions on Image Processing},
-  year={2022}
+  year={2022},
+  volume={31},
+  pages={2148-2161},
+  doi={10.1109/TIP.2022.3151999}
 }
 ```
 
