@@ -3,6 +3,9 @@ Dataset, code and result repository for our paper:
 
 Weakly Supervised RGB-D Salient Object Detection with Prediction Consistency Training and Active Scribble Boosting, TIP'22
 
+![alt text](./teaser.jpeg) 
+
+
 ## Scribble datasets (NJU2K-S & NLPR-S)
 We manually re-labeled two widely used publicly available RGB-D SOD benchmarks (*i.e.*, NJU2K and NLPR) with scribble annotattions.
 Please find the scribble datasets from [Google Drive](https://drive.google.com/drive/folders/1U5-n3oLWLHqePE--ivKywnjqdJNgGZJq).
