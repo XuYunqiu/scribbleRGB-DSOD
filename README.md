@@ -3,7 +3,7 @@ Dataset, code and result repository for our paper:
 
 Weakly Supervised RGB-D Salient Object Detection with Prediction Consistency Training and Active Scribble Boosting, TIP'22
 
-![alt text](./teaser.jpeg) 
+![alt text](./teaser.jpg) 
 
 
 ## Scribble datasets (NJU2K-S & NLPR-S)
