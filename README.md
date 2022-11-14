@@ -5,20 +5,164 @@ Weakly Supervised RGB-D Salient Object Detection with Prediction Consistency Tra
 
 ![alt text](./teaser.jpg) 
 
+## Installation
+### Requirements
+- Linux with Python ≥ 3.6
+- CUDA == 9.2
+- PyTorch == 1.4 and torchvision that matches the PyTorch installation
+- cv2, tqdm, scikit-learn
 
-## Scribble datasets (NJU2K-S & NLPR-S)
-We manually re-labeled two widely used publicly available RGB-D SOD benchmarks (*i.e.*, NJU2K and NLPR) with scribble annotattions.
-Please find the scribble datasets from [Google Drive](https://drive.google.com/drive/folders/1U5-n3oLWLHqePE--ivKywnjqdJNgGZJq).
+Note, other PyTorch and CUDA versions may bring performance degradation.
 
-## Code and pre-trained models
-Coming soon.
+## Data Preparation
+### Scribble RGB-D SOD Datasets (NJU2K-S & NLPR-S)
+- We manually re-label two widely used publicly available RGB-D SOD benchmarks (*i.e.*, NJU2K and NLPR) with scribble annotattions, and use them as the training datasets.
+Please find the scribble datasets from [Google Drive](https://drive.google.com/file/d/1YBnBeMtI6AnM61KFi-THkLgoCw5GlBFH/view?usp=share_link).
 
-## Results
-Coming soon.
+- We use seven commonly used RGB-D SOD benchmarks (*i.e.*, DES, LFSD, NJU2K_Test, NLPR_Test, SIP, SSD, STERE) as the testing datasets. Please find the testing datasets from [Google Drive](https://drive.google.com/file/d/1vLSolPQ_luChn2kfqXbpv4JmlQy6LHVR/view?usp=share_link).
+
+Download and unzip the training and testing datasets. The dataset directory needs to have the following directory structure:
+```
+dataset
+├── train_data/
+|   └── {depth,gray,gt,gt_mask,img,mask}/
+└── test_data/
+    └── {depth,gt,img}/
+        └── {DES,LFSD,NJU2K_Test,NLPR_Test,SIP,SSD,STERE}/
+```
+The `gt`, `mask` and `gt_mask` in train_data contain foreground scribbles, foreground+background scribbles and ground-truth masks respectively. The `gray` contains grayscale images converted using this [code](https://github.com/JingZhang617/Scribble_Saliency/blob/master/convert_rgb2gray.m).
+
+We also provide the coarse scribbles labeled by annotator2 in [Google Drive](https://drive.google.com/drive/folders/1ZowRWZQg9bwuH-k_MXe4Z33x51Y2Xr_Z?usp=share_link).
+
+## Getting Started
+### Training & Inference in Command Line
+
+1. To train a warm-up stage model, run
+```
+python train.py --output_dir /path/to/checkpoint_dir --warmup_stage
+```
+
+2. To generate saliency maps using a trained warm-up stage model, run
+```
+python test.py --model_path /path/to/checkpoint_file --warmup_stage
+```
+
+3. To train a mutual learning stage model, run
+```
+python train.py --output_dir /path/to/checkpoint_dir --warmup_model /path/to/checkpoint_file
+```
+
+4. To generate saliency maps using a trained mutual learning stage model, run
+```
+python test.py --model_path /path/to/checkpoint_file
+```
+
+### Evaluation
+- Python evaluation for MAE metric, run `mae_eval.py`
+
+- MATLAB evaluation for all metrics, run `./matlab_measure/rgbd_metric.m`
+
+## Results with Pre-trained Models
+Our pre-trained models and predicted saliency maps are available. All models are trained on a single NVIDIA V100-32G GPU. Average results over seven RGB-D SOD benchmarks are reported. 
+
+<table><tbody>
+<!-- START TABLE -->
+<!-- TABLE HEADER -->
+<th valign="bottom">Name</th>
+<th valign="bottom">$S_{\alpha}$</th>
+<th valign="bottom">$F_{\beta}^\text{mean}$</th>
+<th valign="bottom">$E_{\xi}^\text{mean}$</th>
+<th valign="bottom">MAE</th>
+<th valign="bottom">download</th>
+<!-- TABLE BODY -->
+
+<tr><td align="left">SSAL-D</td>
+<td align="center">.8399</td>
+<td align="center">.8243</td>
+<td align="center">.8959</td>
+<td align="center">.0612</td>
+<td align="center"><a href="https://drive.google.com/drive/folders/13rwi_49Gcy_cE1xpCvKdscA7MtS537Tu?usp=share_link">saliency maps</a></td>
+</tr>
+
+<tr><td align="left">SCWC-D</td>
+<td align="center">.8415</td>
+<td align="center">.8280</td>
+<td align="center">.9008</td>
+<td align="center">.0604</td>
+<td align="center"><a href="https://drive.google.com/drive/folders/1GnlfV41-ug_hnj221g-wlLVYZtcPuLaU?usp=share_link">saliency maps</a></td>
+</tr>
+
+<tr><td align="left">BBSNet-W</td>
+<td align="center">.8469</td>
+<td align="center">.8072</td>
+<td align="center">.9030</td>
+<td align="center">.0593</td>
+<td align="center"><a href="https://drive.google.com/drive/folders/14RAgHItZwSEwqI9O9jQWmAX8OaVVlsCq?usp=share_link">saliency maps</a></td>
+</tr>
+
+<tr><td align="left">ours w/o pct</td>
+<td align="center">.8529</td>
+<td align="center">.8359</td>
+<td align="center">.9041</td>
+<td align="center">.0566</td>
+<td align="center"><a href="https://drive.google.com/file/d/1NbcGxeYwfwj4P7vlvTa0yrhc5sFqAcsy/view?usp=share_link">model</a>&nbsp;|&nbsp;<a href="https://drive.google.com/drive/folders/1pRlW1sTMVh16yeCDakaaZZq740OUGpgG?usp=share_link">saliency maps</a></td>
+</tr>
+
+<tr><td align="left">ours</td>
+<td align="center">.8633</td>
+<td align="center">.8398</td>
+<td align="center">.9096</td>
+<td align="center">.0549</td>
+<td align="center"><a href="https://drive.google.com/file/d/17ip6LGDjLbiZFcsVj-vEdxt_x5RS89sP/view?usp=share_link">model</a>&nbsp;|&nbsp;<a href="https://drive.google.com/drive/folders/190KC-qcsXI7B7MDyDclRoKm92b1Qpnm3?usp=share_link">saliency maps</a></td>
+</tr>
+
+<tr><td align="left">ours (anno2)</td>
+<td align="center">.8550</td>
+<td align="center">.8245</td>
+<td align="center">.9036</td>
+<td align="center">.0596</td>
+<td align="center"><a href="https://drive.google.com/file/d/1JSUCrgp4a2I6jOytKViTB_ZnEyEqQCKP/view?usp=share_link">model</a>&nbsp;|&nbsp;<a href="https://drive.google.com/drive/folders/1iO0RGj_LLqCpdgHWG2Vsj2kEXCSpiEGM?usp=share_link">saliency maps</a></td>
+</tr>
+
+<tr><td align="left">ours+</td>
+<td align="center">.8619</td>
+<td align="center">.8401</td>
+<td align="center">.9094</td>
+<td align="center">.0543</td>
+<td align="center"><a href="https://drive.google.com/file/d/1Xob7OHxFRzhzQQr52qhUyuI8NSyVXTYG/view?usp=share_link">model</a>&nbsp;|&nbsp;<a href="https://drive.google.com/drive/folders/1gIc-K_nUF9-IzkseWRwYmYFd-XADifSK?usp=share_link">saliency maps</a></td>
+</tr>
+
+<tr><td align="left">ours+10%ABS</td>
+<td align="center">.8677</td>
+<td align="center">.8456</td>
+<td align="center">.9115</td>
+<td align="center">.0529</td>
+<td align="center"><a href="https://drive.google.com/file/d/1cV7Sa0yuWrm2uNieIOtBGzEEUUdyETRo/view?usp=share_link">model</a>&nbsp;|&nbsp;<a href="https://drive.google.com/drive/folders/1y-4cVRadngaFSkzq8aaZHwENyKfA19-g?usp=share_link">saliency maps</a></td>
+</tr>
+
+<!-- END OF TABLE BODY -->
+</tbody></table>
+
+- `SSAL-D`, `SCWC-D` and `BBSNet-W` are our implemented scribble-based RGB-D SOD variants.
+
+- `ours w/o pct` is the warm-up stage model. To obtain saliency maps using the pre-trained models run
+```
+python test.py --model_path /path/to/checkpoint_file --warmup_stage
+```
+
+- `ours` and `ours(anno2)` are the mutual learning stage models trained with scribbles labeled by annotator1 (default) and annotator2 respectively. To obtain saliency maps using the pre-trained models run
+```
+python test.py --model_path /path/to/checkpoint_file 
+```
+
+- `ours+` and `ours+10%ABS` are the second-round models, where `ours+` is self-training model without extra scribbles and `ours+10%ABS` is trained with 10% extra scribbles selected by ABS. To obtain saliency maps using the pre-trained models run
+```
+python test.py --model_path /path/to/checkpoint_file --second_round
+```
 
 ## Citation
 If you find this project useful for your research, please use the following BibTeX entry.
-```
+```BibTeX
 @article{xu2022weakly,
   title={Weakly Supervised RGB-D Salient Object Detection with Prediction Consistency Training and Active Scribble Boosting},
   author={Xu, Yunqiu and Yu, Xin and Zhang, Jing and Zhu, Linchao and Wang, Dadong},
